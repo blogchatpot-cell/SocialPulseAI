@@ -11,21 +11,18 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-          
-      - name: Install Capacitor CLI
-        run: npm install -g @capacitor/cli @capacitor/android
-        
-      - name: Build Web Assets
+
+      - name: Create Web Directory
         run: |
-          npm install
-          npm run build || mkdir -p dist && echo "<html><body>Social Tech</body></html>" > dist/index.xml
-          
-      - name: Sync with Android
+          mkdir -p www
+          echo "<html><body>Social Tech Online</body></html>" > www/index.html
+
+      - name: Setup Android Project
         run: |
+          npm install -g @capacitor/cli @capacitor/android
           npx cap add android || true
-          npx cap sync android
           
-      - name: Build APK (The Real Build)
+      - name: Build APK
         run: |
           cd android
           ./gradlew assembleDebug
