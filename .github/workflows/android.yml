@@ -10,6 +10,13 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
+      - name: Install Capacitor & Android Platform
+        run: |
+          npm install
+          npm install -g @capacitor/cli @capacitor/android
+          mkdir -p www && echo "<html><body>Social Tech</body></html>" > www/index.html
+          npx cap add android || true
+          npx cap sync android
       - name: Build APK
         run: |
           cd android
