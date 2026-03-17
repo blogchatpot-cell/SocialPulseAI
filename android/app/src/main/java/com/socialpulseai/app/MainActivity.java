@@ -1,4 +1,4 @@
-package com.socialpulse.ai;
+package com.socialpulseai.app;
 
 import com.getcapacitor.BridgeActivity;
 
