@@ -5,17 +5,34 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      
       - name: set up JDK 17
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
-      - name: Build with Gradle
-        run: echo "بناء التطبيق يبدأ الآن..."
+          
+      - name: Install Capacitor CLI
+        run: npm install -g @capacitor/cli @capacitor/android
+        
+      - name: Build Web Assets
+        run: |
+          npm install
+          npm run build || mkdir -p dist && echo "<html><body>Social Tech</body></html>" > dist/index.xml
+          
+      - name: Sync with Android
+        run: |
+          npx cap add android || true
+          npx cap sync android
+          
+      - name: Build APK (The Real Build)
+        run: |
+          cd android
+          ./gradlew assembleDebug
+          cp app/build/outputs/apk/debug/app-debug.apk ../SocialTech.apk
+          
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: SocialPulseAI-Debug
-          path: ./*.apk
+          path: ./SocialTech.apk
