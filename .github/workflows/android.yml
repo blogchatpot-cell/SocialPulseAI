@@ -1,4 +1,4 @@
-name: Build Android APK
+name: Final Build Social Tech
 on: [push]
 jobs:
   build:
@@ -10,13 +10,23 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-      - name: Build with Gradle
+
+      - name: Full Auto Setup
+        run: |
+          npm init -y
+          npm install @capacitor/core @capacitor/cli @capacitor/android
+          mkdir -p www && echo "<html><head><meta charset='UTF-8'></head><body><h1>سوشيال تك - جاري التحميل...</h1></body></html>" > www/index.html
+          npx cap init "Social Tech" com.socialpulseai.app --web-dir www
+          npx cap add android
+
+      - name: Grant Permissions & Build
         run: |
           cd android
           chmod +x gradlew
           ./gradlew assembleDebug
-      - name: Upload APK
+
+      - name: Deliver APK
         uses: actions/upload-artifact@v4
         with:
-          name: SocialTech-App
+          name: SocialTech-Success-APK
           path: android/app/build/outputs/apk/debug/*.apk
